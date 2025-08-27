@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Article Kegiatan KKN Mandiri</title>
+  <style>
+    :root{
+      --bg:#f8f2ec;
+      --card:#f3e8de;
+      --accent:#8b5e3c;
+      --muted:#6c4f3a;
+      --radius:18px;
+      font-family: 'Segoe UI', Roboto, Inter, sans-serif;
+    }
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#efe6dd);color:var(--muted);min-height:100vh}
+    header{background:linear-gradient(90deg, rgba(139,94,60,0.15), rgba(139,94,60,0.05));padding:32px 20px;text-align:center}
+    header h1{margin:0;font-size:28px;color:var(--accent);font-weight:700}
+    header p{margin:8px 0 0;font-size:15px;color:rgba(108,79,58,0.9)}
+
+    main{max-width:1080px;margin:28px auto;padding:0 20px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:24px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr} .sidebar{order:-1}}
+
+    .card{background:var(--card);padding:20px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(101,67,45,0.08)}
+    .article-list{display:flex;flex-direction:column;gap:14px}
+    .article{display:flex;gap:14px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.6);align-items:flex-start}
+    .thumb{width:120px;height:90px;border-radius:10px;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:12px;color:#aaa;border:1px dashed rgba(108,79,58,0.15)}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .meta{flex:1}
+    .meta h3{margin:0;font-size:16px;color:var(--accent)}
+    .meta p{margin:6px 0 0;font-size:13px;color:rgba(108,79,58,0.9)}
+    .meta .small{font-size:12px;color:rgba(108,79,58,0.7)}
+    .btn{display:inline-block;padding:8px 12px;border-radius:10px;background:var(--accent);color:white;text-decoration:none;font-weight:600;font-size:13px;border:none;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(139,94,60,0.2)}
+
+    .sidebar .upload-form{display:flex;flex-direction:column;gap:10px}
+    label{font-size:13px;color:var(--muted)}
+    input[type=text], input[type=password], input[type=file]{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(108,79,58,0.15);background:white}
+    footer{max-width:1080px;margin:24px auto;padding:8px 20px;color:rgba(108,79,58,0.6);font-size:13px;text-align:center}
+
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:28px;background:rgba(0,0,0,0.5);z-index:999}
+    .modal.open{display:flex}
+    .modal .box{width:100%;max-width:1080px;height:90vh;background:var(--card);border-radius:14px;padding:14px;display:flex;flex-direction:column}
+    .modal .box .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .viewer{flex:1;border-radius:8px;overflow:hidden;background:white;margin-top:10px;display:flex}
+    .viewer iframe{width:100%;height:100%;border:none}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Article Kegiatan KKN Mandiri</h1>
+    <p>Portal Artikel Tema: Mengolah Sampah Plastik Menjadi Tas Belanja<br>oleh: Khaalishah Rahmatullah (403220050) • DPL: Yenti, S.S., M.Pd</p>
+  </header>
+
+  <main>
+    <div class="grid">
+      <section class="card">
+        <h2 style="margin-top:0;color:var(--accent)">Artikel Terbaru</h2>
+        <div id="articles" class="article-list"></div>
+      </section>
+
+      <aside class="card sidebar">
+        <h3 style="margin-top:0;color:var(--accent)">Unggah Artikel (PDF + Foto)</h3>
+        <form id="uploadForm" class="upload-form">
+          <label>Judul</label>
+          <input type="text" id="title" value="Mengolah Sampah Plastik Menjadi Tas Belanja" required />
+
+          <label>Penulis</label>
+          <input type="text" id="author" value="Khaalishah Rahmatullah (403220050)" required />
+
+          <label>Dosen Pembimbing (DPL)</label>
+          <input type="text" id="dpl" value="Yenti, S.S., M.Pd" />
+
+          <label>Foto Utama</label>
+          <input type="file" id="photoFile" accept="image/*" required />
+
+          <label>File PDF</label>
+          <input type="file" id="pdfFile" accept="application/pdf" required />
+
+          <label>Sandi (untuk unggah)</label>
+          <input type="password" id="password" placeholder="Masukkan sandi" required />
+
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <button type="button" id="uploadBtn" class="btn">Unggah</button>
+          </div>
+          <p class="note" style="font-size:12px;color:rgba(108,79,58,0.7)">Gunakan sandi <strong>ica123</strong> untuk unggah.</p>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Portal KKN • portal by Khaalishah Rahmatullah •
+  </footer>
+
+  <div id="modal" class="modal" role="dialog">
+    <div class="box">
+      <div class="top">
+        <div>
+          <strong id="modalTitle" style="color:var(--accent)"></strong>
+          <div id="modalMeta" style="font-size:12px;color:rgba(108,79,58,0.7)"></div>
+        </div>
+        <button id="closeBtn" class="btn">Tutup</button>
+      </div>
+      <div class="viewer" id="viewerArea"></div>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = 'ica123';
+    const articles = [];
+
+    function renderArticles(){
+      const container = document.getElementById('articles');
+      container.innerHTML = '';
+      if(articles.length===0){
+        container.innerHTML = '<div style="font-size:13px;color:rgba(108,79,58,0.7)">Belum ada artikel.</div>';
+        return;
+      }
+      articles.forEach(it=>{
+        const wrap = document.createElement('div'); wrap.className='article';
+        const thumb = document.createElement('div'); thumb.className='thumb';
+        if(it.photo){ let img=document.createElement('img'); img.src=it.photo; thumb.appendChild(img);} else {thumb.textContent='No Img';}
+        const meta=document.createElement('div'); meta.className='meta';
+        meta.innerHTML = `<h3>${it.title}</h3><p><strong>${it.author}</strong> • ${it.dpl}</p><div class='small'>${it.uploaded_at}</div>`;
+        const btn=document.createElement('button'); btn.className='btn ghost'; btn.textContent='Baca';
+        btn.onclick=()=>openViewer(it);
+        meta.appendChild(btn);
+        wrap.appendChild(thumb); wrap.appendChild(meta);
+        container.appendChild(wrap);
+      });
+    }
+
+    function openViewer(meta){
+      const modal=document.getElementById('modal');
+      document.getElementById('modalTitle').textContent=meta.title;
+      document.getElementById('modalMeta').textContent=meta.author+' • '+meta.dpl+' • '+meta.uploaded_at;
+      const viewer=document.getElementById('viewerArea');
+      viewer.innerHTML='';
+      const ifr=document.createElement('iframe'); ifr.src=meta.pdf; viewer.appendChild(ifr);
+      modal.classList.add('open');
+    }
+    document.getElementById('closeBtn').onclick=()=>{document.getElementById('modal').classList.remove('open')}
+
+    document.getElementById('uploadBtn').onclick=()=>{
+      const pw=document.getElementById('password').value;
+      if(pw!==PASSWORD){alert('Sandi salah');return;}
+      const title=document.getElementById('title').value;
+      const author=document.getElementById('author').value;
+      const dpl=document.getElementById('dpl').value;
+      const pdfFile=document.getElementById('pdfFile').files[0];
+      const photoFile=document.getElementById('photoFile').files[0];
+      if(!pdfFile||!photoFile){alert('Lengkapi PDF dan Foto');return;}
+
+      const readerPDF=new FileReader();
+      const readerPhoto=new FileReader();
+
+      readerPDF.onload=function(ePDF){
+        readerPhoto.onload=function(ePhoto){
+          const item={title,author,dpl,pdf:ePDF.target.result,photo:ePhoto.target.result,uploaded_at:new Date().toLocaleString()};
+          articles.unshift(item);
+          renderArticles();
+          alert('Artikel berhasil diunggah (tersimpan lokal, perlu backend agar semua pengguna bisa lihat).');
+          document.getElementById('uploadForm').reset();
+        };
+        readerPhoto.readAsDataURL(photoFile);
+      };
+      readerPDF.readAsDataURL(pdfFile);
+    };
+
+    renderArticles();
+  </script>
+</body>
+</html>
